@@ -1,0 +1,12 @@
+body {
+    font-family: 'Microsoft Jhenghei';
+    background-color:midnightblue;
+}
+
+.main {
+    width: 100%;
+}
+
+.main > h1 , p{
+    color: cornsilk;
+}
