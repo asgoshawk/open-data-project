@@ -1,0 +1,141 @@
+/* Color scheme */
+/* 
+    Blue and Refreshing
+    #25274D
+    #464866
+    #AAABB8
+    #2E9CCA
+    #29648A
+*/
+/* 
+    Gorgeous Contrast
+    #61892F
+    #86C232
+    #222629
+    #474B4F
+    #6B6E70
+*/
+
+body {
+    font-family: 'Microsoft Jhenghei', Arial, Helvetica, sans-serif;
+    background-color:#222629;
+}
+
+/* header {
+    width: 100%;
+    padding: 100px 0px;
+    background-image: url(https://picsum.photos/id/1063/1920/1080);
+    background-size: cover;
+    color: white;
+    text-align: center;
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.header-content > h1 , p{
+    color: cornsilk;
+} */
+
+.loading {
+    height: 100vh;
+    position: relative;
+    align-items: center;
+}
+
+/* Loading icon */
+.loadingIcon {
+    height: 160px;
+    width: 160px;
+    position: absolute;
+    margin: auto auto;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.lds-ripple {
+    display: inline-block;
+    width: 160px;
+    height: 160px;
+}
+
+.lds-ripple div {
+    position: absolute;
+    border: 4px solid #86C232;
+    opacity: 1;
+    border-radius: 50%;
+    animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+ }
+
+.lds-ripple div:nth-child(2) {
+    animation-delay: -0.5s;
+}
+
+@keyframes lds-ripple {
+    0% {
+      top: 45px;
+      left: 45px;
+      width: 70px;
+      height: 70px;
+      opacity: 1;
+    }
+    100% {
+      top: 0px;
+      left: 0px;
+      width: 160px;
+      height: 160px;
+      opacity: 0;
+    }
+}
+
+.loadingText {
+    font-size: 10px;
+    color: #61892F;
+    opacity: .5;
+    /* width: 100%; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    position: absolute;
+    margin: auto auto;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+/* Loading page link */
+.ghPageLink {
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    bottom: 20px;
+}
+
+.ghPageLink i{
+    vertical-align: middle;
+    font-size: 25px;
+}
+
+.ghPageLink a{
+    vertical-align: middle;
+    text-decoration: none;
+    color: #6B6E70;
+}
+
+
+@media (max-width: 576px) {
+    /* header {
+        height: 100vh;
+        padding: 0px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    header h1 {
+        margin-top: 0px;
+    } */
+
+}
