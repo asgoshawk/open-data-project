@@ -122,7 +122,9 @@
 
 .content {
     margin-left: 180px;
+    margin-right: 30px;
     color: white;
+    overflow: hidden;
 }
 
 @media (max-width: 576px) {
