@@ -30,6 +30,10 @@
     color: cornsilk;
 } */
 
+/* body {
+    background-color:#000409;
+} */
+
 .main {
     /* Only in the beginning */
     display: none;
@@ -41,8 +45,38 @@
     display: block;
     height: 100vh;
     width: 150px;
-    /* background-color: #474B4F; */
+    background-color: #222629;
     position: fixed;
+}
+
+.brand {
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: 50px;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.brand a {
+    text-decoration: none;
+}
+
+.brand a:hover span {
+    color: white;
+}
+
+.brand span {
+    font-size: 5px;
+    display: block;
+    width: 100%;
+    color: #6B6E70;
+    text-align: center;
+    transition: all .3s ease-in-out;
+}
+
+.brand i {
+    font-size: 35px;
 }
 
 .navbar-list {
@@ -53,12 +87,12 @@
 }
 
 .navbar-item {
-    height: 10vh;
+    height: 7vh;
     position: relative;
     border-left: #6B6E70 solid 3px;
     margin-left: 30px;
     margin-top: 10px;
-    padding-left: 5px;
+    padding-left: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -68,7 +102,7 @@
 }
 
 .navbar-item span {
-    font-size: 20px;
+    font-size: 15px;
     vertical-align: middle; 
 }
 
@@ -87,7 +121,7 @@
 }
 
 .content {
-    padding-left: 150px;
+    margin-left: 180px;
     color: white;
 }
 

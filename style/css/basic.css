@@ -1,9 +1,10 @@
 * {
+    margin: 0px;
     box-sizing: border-box;
 }
 
 body {
     margin: 0px;
     font-family: 'Microsoft Jhenghei', Arial, Helvetica, sans-serif;
-    background-color:#222629;
+    background-color:#000409;
 }

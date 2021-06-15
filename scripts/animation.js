@@ -9,6 +9,6 @@ window.addEventListener("load", function () {
 $(".navbar-item").each(function () {
     $(this).click(function () {
         $(this).parent().siblings().children(".navbar-item").removeClass("active");
-        $(this).toggleClass("active");
+        $(this).addClass("active");
     });
 });
