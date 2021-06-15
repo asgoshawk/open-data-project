@@ -1,0 +1,3 @@
+var config = {
+    CWB_Auth: "CWB-8A2389CC-DCF3-45E8-B410-305B35B47F5B",
+}
