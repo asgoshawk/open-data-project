@@ -20,6 +20,7 @@
     height: 100vh;
     position: relative;
     align-items: center;
+    background-color: #222629;
 }
 
 /* Loading icon */
