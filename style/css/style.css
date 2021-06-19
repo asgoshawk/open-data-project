@@ -127,6 +127,10 @@
     overflow: hidden;
 }
 
+.plotForcast {
+    width: 100%;
+}
+
 @media (max-width: 576px) {
     /* header {
         height: 100vh;
