@@ -127,11 +127,54 @@
     overflow: hidden;
 }
 
+.observation {
+    display: flex;
+    /* justify-content:space-evenly; */
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.overview1 {
+    width: 50%;
+    max-width: 600px;
+    height: 40vh;
+    background-color: #222629;
+    border: 10px solid #000409;
+    border-radius: 20px;
+}
+
+.overview2 {
+    width: 25%;
+    max-width: 300px;
+    height: 40vh;
+    /* background-color: #222629;
+    border: 3px solid #000409;
+    border-radius: 10px; */
+}
+
+.overview2-item {
+    height: 50%;
+    background-color: #222629;
+    border: 10px solid #000409;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.timeSeries {
+    width: 50%;
+    max-width: 600px;
+    height: 40vh;
+    background-color: #222629;
+    border: 10px solid #000409;
+    border-radius: 20px;
+}
+
 .plotForcast {
     width: 100%;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
     /* header {
         height: 100vh;
         padding: 0px;
@@ -144,4 +187,28 @@
         margin-top: 0px;
     } */
 
+    .overview1 {
+        width: 100%;
+        height: 40vh;
+        border: 5px solid #000409;
+        border-radius: 10px;
+    }
+    
+    .overview2 {
+        width: 50%;
+        height: 40vh;
+    }
+
+    .overview2-item {
+        border: 5px solid #000409;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .timeSeries {
+        width: 100%;
+        height: 40vh;
+        border: 5px solid #000409;
+        border-radius: 10px;
+    }
 }

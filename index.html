@@ -55,11 +55,6 @@
             <div class="navbar-list">
                 <a href="#" style="text-decoration: none;">
                     <div class="navbar-item active">
-                        <span>Intro</span>
-                    </div>
-                </a>
-                <a href="#" style="text-decoration: none;">
-                    <div class="navbar-item">
                         <span>Observation</span>
                     </div>
                 </a>
@@ -70,12 +65,12 @@
                 </a>
                 <a href="#" style="text-decoration: none;">
                     <div class="navbar-item">
-                        <span>Link</span>
+                        <span>Air Qulity</span>
                     </div>
                 </a>
                 <a href="#" style="text-decoration: none;">
                     <div class="navbar-item">
-                        <span>Link</span>
+                        <span>Map</span>
                     </div>
                 </a>
             </div>
@@ -85,8 +80,44 @@
         </div>
 
         <div class="content">
-            <p>Hello World</p>
-            <img src="https://picsum.photos/1500/800" alt="">
+            <h1>Weather Element</h1>
+            <div class="observation">
+
+                <div class="overview1">
+
+                </div>
+                <div class="overview2 temp-pres">
+                    <div class="overview2-item temp">
+                        <h4>Temperature</h4>
+                    </div>
+                    <div class="overview2-item pres">
+                        <h4>Pressure</h4>
+                    </div>
+                </div>
+                <div class="overview2 humi-wind">
+                    <div class="overview2-item humi">
+                        <h4>RH</h4>
+                    </div>
+                    <div class="overview2-item wind">
+                        <h4>Wind</h4>
+                    </div>
+                </div>
+
+                <div class="timeSeries">
+
+                </div>
+                <div class="timeSeries">
+
+                </div>
+                <!-- <div class="timeSeries">
+
+                </div>
+                <div class="timeSeries">
+
+                </div> -->
+            </div>
+
+            <!-- <img src="https://picsum.photos/1500/800" alt=""> -->
             <div class="plotForcast">
                 <div id="plotlyForcast"></div>
             </div>
@@ -97,7 +128,7 @@
     <!-- JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
         referrerpolicy="no-referrer"></script>
-    <script src="./scripts/animation.js"></script>
+    <script src="./scripts/basic.js"></script>
     <script src="./scripts/config.js"></script>
     <script src="./scripts/main.js"></script>
 

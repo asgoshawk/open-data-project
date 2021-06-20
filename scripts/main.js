@@ -2,11 +2,7 @@ async function getCWBForcastData(locationName) {
     var authKey = config.CWB_Auth;
     var cwbURL = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-071?Authorization=" + authKey + "&format=JSON&locationName=" + locationName;
     let cwbForcast = await fetch(cwbURL).then(res => { return res.json() })
-        .then(result => {
-            data = result.records.locations[0].location[0].weatherElement;
-            console.log(data);
-            return data;
-        })
+        .then(result => { return result.records.locations[0].location[0].weatherElement; })
         .catch(err => { console.log(err); });
     return cwbForcast;
 };
@@ -15,11 +11,7 @@ async function getCWBObserveData(locationName) {
     var authKey = config.CWB_Auth;
     var cwbURL = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=" + authKey + "&format=JSON&locationName=" + locationName;
     let cwbObserve = await fetch(cwbURL).then(res => { return res.json() })
-        .then(result => {
-            data = result.records.location[0].weatherElement;
-            console.log(data);
-            return data;
-        })
+        .then(result => { return result.records.location[0].weatherElement; })
         .catch(err => { console.log(err); });
     return cwbObserve;
 };
@@ -62,6 +54,10 @@ function plotForcast(forcastData) {
     // var timeSeriseData = forcastData.time
 }
 
+function updateObserveData(ObserveDate) {
+
+};
+
 // Onload 
 window.onload = function () {
     var locationNameForcast = "板橋區";
@@ -69,7 +65,7 @@ window.onload = function () {
 
 
     var locationNameObserve = "板橋";
-    getCWBObserveData(locationNameObserve);
+    getCWBObserveData(locationNameObserve).then(data => console.log(data));
 
     // // Loading page
     // window.addEventListener("load", function () {
