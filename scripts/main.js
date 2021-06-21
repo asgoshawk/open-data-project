@@ -66,7 +66,9 @@ function updateObserveData(ObserveData) {
     document.getElementById('humd').innerHTML = humd.toString();
     document.getElementById('pres').innerHTML = pres;
     document.getElementById('wind').innerHTML = wdsd + ' ';
-    document.getElementById('wdir').style.transform = "rotate(" + wdir + "deg)";
+    // document.getElementById('wdir').style.transform = "rotate(" + wdir.toString() + "deg)";
+    document.getElementById('wdir').className = 'wi wi-wind ' + 'from-' + wdir + '-deg';
+
 
 };
 
