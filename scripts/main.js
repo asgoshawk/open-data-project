@@ -81,6 +81,10 @@ window.onload = function () {
     var locationNameObserve = "板橋";
     getCWBObserveData(locationNameObserve).then(data => updateObserveData(data));
 
+
+    document.getElementById('refresh-observation').onclick = function () {
+        getCWBObserveData(locationNameObserve).then(data => updateObserveData(data))
+    };
     // // Loading page
     // window.addEventListener("load", function () {
     //     $(".loading").delay(1000).fadeOut("slow", function () {
