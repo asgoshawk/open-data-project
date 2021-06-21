@@ -135,10 +135,17 @@
     flex-direction: row;
 }
 
+.observation>h1 {
+    display: block;
+    width: 100%;
+    padding-left: 20px;
+}
+
 .overview1 {
     width: 50%;
-    max-width: 600px;
+    /* max-width: 600px; */
     height: 40vh;
+    max-height: 600px;
     background-color: #222629;
     border: 10px solid #000409;
     border-radius: 20px;
@@ -146,8 +153,9 @@
 
 .overview2 {
     width: 25%;
-    max-width: 300px;
+    /* max-width: 300px; */
     height: 40vh;
+    max-height: 600px;
     /* background-color: #222629;
     border: 3px solid #000409;
     border-radius: 10px; */
@@ -155,16 +163,47 @@
 
 .overview2-item {
     height: 50%;
+    max-height: 300px;
     background-color: #222629;
     border: 10px solid #000409;
     border-radius: 20px;
     padding: 10px;
+    position: relative;
+
+}
+
+.weather-value {
+    height: 50%;
+    text-align: center;
+    align-items: center;
+    font-size: 5vw;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto auto;
+    display: flex;
+    justify-content: center;
+}
+
+.weather-value span {
+    display: block;
+}
+
+.weather-value #pres {
+    font-size: 4vw;
+}
+
+.weather-value #wind{
+    margin-right: 10px;
 }
 
 .timeSeries {
     width: 50%;
-    max-width: 600px;
+    /* max-width: 600px; */
     height: 40vh;
+    max-height: 600px;
     background-color: #222629;
     border: 10px solid #000409;
     border-radius: 20px;

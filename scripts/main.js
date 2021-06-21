@@ -54,7 +54,19 @@ function plotForcast(forcastData) {
     // var timeSeriseData = forcastData.time
 }
 
-function updateObserveData(ObserveDate) {
+function updateObserveData(ObserveData) {
+    console.log(ObserveData);
+    var wdir = ObserveData[1].elementValue;
+    var wdsd = ObserveData[2].elementValue;
+    var temp = ObserveData[3].elementValue;
+    var humd = parseFloat(ObserveData[4].elementValue * 100);
+    var pres = ObserveData[5].elementValue;
+
+    document.getElementById('temp').innerHTML = temp;
+    document.getElementById('humd').innerHTML = humd.toString();
+    document.getElementById('pres').innerHTML = pres;
+    document.getElementById('wind').innerHTML = wdsd + ' ';
+    document.getElementById('wdir').style.transform = "rotate(" + wdir + "deg)";
 
 };
 
@@ -65,7 +77,7 @@ window.onload = function () {
 
 
     var locationNameObserve = "板橋";
-    getCWBObserveData(locationNameObserve).then(data => console.log(data));
+    getCWBObserveData(locationNameObserve).then(data => updateObserveData(data));
 
     // // Loading page
     // window.addEventListener("load", function () {
