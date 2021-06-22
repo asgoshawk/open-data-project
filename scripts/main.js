@@ -68,8 +68,25 @@ function updateObserveData(ObserveData) {
     document.getElementById('wind').innerHTML = wdsd + ' ';
     // document.getElementById('wdir').style.transform = "rotate(" + wdir.toString() + "deg)";
     document.getElementById('wdir').className = 'wi wi-wind ' + 'from-' + wdir + '-deg';
+};
 
-
+function getPast24hrObserveData() {
+    const cors = 'https://cors-anywhere.herokuapp.com/';
+    const urlCWB = cors + 'https://www.cwb.gov.tw/V8/C/W/Observe/MOD/24hr/46688.html?';
+    $.ajax({
+        url: urlCWB,
+        type: 'GET',
+        dataType: 'html',
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        },
+        error: function (xhr) {
+            console.log('failed');
+        },
+        success: function (res) {
+            console.log(res);
+        },
+    });
 };
 
 // Onload 
@@ -85,6 +102,8 @@ window.onload = function () {
     document.getElementById('refresh-observation').onclick = function () {
         getCWBObserveData(locationNameObserve).then(data => updateObserveData(data))
     };
+
+    // getPast24hrObserveData();
     // // Loading page
     // window.addEventListener("load", function () {
     //     $(".loading").delay(1000).fadeOut("slow", function () {
@@ -94,3 +113,4 @@ window.onload = function () {
     // });
 
 };
+

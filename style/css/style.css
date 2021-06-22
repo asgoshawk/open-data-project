@@ -149,16 +149,29 @@
     border: none;
     background: none;
     color: #6B6E70;
-    font-size: 35px;
+    font-size: 30px;
     padding: 0;
-    transition: color,transform .5s ease;
+    transition: color .5s ease;
+}
+
+.refresh-data>i {
+    display: block;
 }
 
 .refresh-data:hover {
     color: #86C232;
-    transform: rotate(360deg);
+    /* transform: rotate(360deg); */
+    animation: rotation 1s infinite linear;
 }
 
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
 
 .overview1 {
     width: 50%;
