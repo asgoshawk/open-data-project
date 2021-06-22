@@ -23,7 +23,6 @@ function plotForcast(forcastData) {
         return new Date((date1 + date2) / 2);
     });
     var dataValue = forcastData.time.map(item => item.elementValue[0].value);
-    console.log(timeStamp);
 
     var data = [
         {
@@ -52,7 +51,7 @@ function plotForcast(forcastData) {
     var config = { responsive: true }
     Plotly.newPlot('plotlyForcast', data, layout, config);
     // var timeSeriseData = forcastData.time
-}
+};
 
 function updateObserveData(ObserveData) {
     console.log(ObserveData);
@@ -70,23 +69,80 @@ function updateObserveData(ObserveData) {
     document.getElementById('wdir').className = 'wi wi-wind ' + 'from-' + wdir + '-deg';
 };
 
-function getPast24hrObserveData() {
-    const cors = 'https://cors-anywhere.herokuapp.com/';
+async function getPast12hrObserveData() {
+    const cors = 'https://api.allorigins.win/raw?url=';
     const urlCWB = cors + 'https://www.cwb.gov.tw/V8/C/W/Observe/MOD/24hr/46688.html?';
-    $.ajax({
-        url: urlCWB,
-        type: 'GET',
-        dataType: 'html',
-        headers: {
-            "X-Requested-With": "XMLHttpRequest"
+    let cwbObserve = await fetch(urlCWB).then(res => { return res.text() })
+        .then(result => {
+            var $dom = $('<html>').html(result),
+                alltd = $('td', $dom),
+                temp = [],
+                humd = [],
+                pres = [],
+                wind = [];
+
+            for (var i = 0; i < 720; i += 10) {
+                // 10 data in a oberservation cycle of 10 mins 
+                // console.log($($(alltd[i]).find('span')[0]).text());  // span C & span F
+                // console.log($($(alltd[i + 3]).find('span')[0]).text()); // span wind(float) & span wind(int)
+                // console.log($(alltd[i + 6]).text()); // humd
+                // console.log($(alltd[i + 7]).text()); // pres
+                // console.log($(alltd[i + 8]).text()); // accum.rain
+                temp.push(parseFloat($($(alltd[i]).find('span')[0]).text()));
+                humd.push(parseInt($(alltd[i + 6]).text()));
+                pres.push(parseFloat($(alltd[i + 7]).text()));
+                wind.push(parseFloat($($(alltd[i + 3]).find('span')[0]).text()));
+            };
+            return { temp: temp, humd: humd, pres: pres, wind: wind };
+        }).catch(err => { console.log(err); });
+    return cwbObserve;
+};
+
+function plotPast12hrObserveData(past12hrObserveData) {
+    var ticks = [];
+    for (var i = 0; i < 72; i++) {
+        ticks.push(i);
+    };
+    var d3 = Plotly.d3;
+    var gd3_temp = d3.select('#plotlyTemp').style({ width: '100%', height: '50%' });
+
+
+    var tempData = [
+        {
+            x: ticks,
+            y: past12hrObserveData.temp,
+            type: 'scatter',
+            mode: 'lines',
+            line: {
+                color: 'white',
+                shape: 'spline'
+            },
+        }
+    ];
+
+    var layout = {
+        plot_bgcolor: 'rgba(0, 0, 0, 0)',
+        paper_bgcolor: 'rgba(0, 0, 0, 0)',
+        xaxis: {
+            color: 'white',
         },
-        error: function (xhr) {
-            console.log('failed');
+        yaxis: {
+            color: 'white'
         },
-        success: function (res) {
-            console.log(res);
-        },
-    });
+        margin: {
+            l: 0,
+            r: 0,
+            b: 0,
+            t: 0,
+            pad: 0,
+        }
+    };
+
+    var config = {
+        responsive: false,
+        showlegend: false
+    }
+    Plotly.newPlot(gd3_temp.node(), tempData, layout, config);
 };
 
 // Onload 
@@ -103,7 +159,7 @@ window.onload = function () {
         getCWBObserveData(locationNameObserve).then(data => updateObserveData(data))
     };
 
-    // getPast24hrObserveData();
+    getPast12hrObserveData();//.then(data => plotPast12hrObserveData(data));
     // // Loading page
     // window.addEventListener("load", function () {
     //     $(".loading").delay(1000).fadeOut("slow", function () {

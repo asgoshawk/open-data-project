@@ -201,7 +201,6 @@
     border-radius: 20px;
     padding: 10px;
     position: relative;
-    
 }
 
 .item-name {
@@ -238,6 +237,16 @@
 .weather-value #wind{
     margin-right: 10px;
 }
+
+.overview2-plotly {
+    position: absolute;
+    top: 50%;
+    bottom: 0px;
+    height: 50%;
+    width: 100%;
+    /* background-color: #474B4F; */
+}
+
 
 .timeSeries {
     width: 50%;
