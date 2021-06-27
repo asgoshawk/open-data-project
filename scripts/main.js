@@ -16,6 +16,48 @@ async function getCWBObserveData(locationName) {
     return cwbObserve;
 };
 
+async function getPast12hrObserveData() {
+    const cors = 'https://api.allorigins.win/raw?url=';
+    const urlCWB = cors + 'https://www.cwb.gov.tw/V8/C/W/Observe/MOD/24hr/46688.html?';
+    let cwbObserve = await fetch(urlCWB).then(res => { return res.text() })
+        .then(result => {
+            var $dom = $('<html>').html(result),
+                alltd = $('td', $dom),
+                temp = [],
+                humd = [],
+                pres = [],
+                wind = [];
+
+            for (var i = 0; i < 720; i += 10) {
+                // 10 data in a oberservation cycle of 10 mins 
+                // console.log($($(alltd[i]).find('span')[0]).text());  // span C & span F
+                // console.log($($(alltd[i + 3]).find('span')[0]).text()); // span wind(float) & span wind(int)
+                // console.log($(alltd[i + 6]).text()); // humd
+                // console.log($(alltd[i + 7]).text()); // pres
+                // console.log($(alltd[i + 8]).text()); // accum.rain
+                temp.push(parseFloat($($(alltd[i]).find('span')[0]).text()));
+                humd.push(parseInt($(alltd[i + 6]).text()));
+                pres.push(parseFloat($(alltd[i + 7]).text()));
+                wind.push(parseFloat($($(alltd[i + 3]).find('span')[0]).text()));
+            };
+            return { temp: temp, humd: humd, pres: pres, wind: wind };
+        }).catch(err => { console.log(err); });
+    return cwbObserve;
+};
+
+async function waitMainDivShows(result) {
+    var timeoutID = window.setInterval(function () {
+        // console.log(document.getElementsByClassName("main")[0].style.height);
+        if (document.getElementsByClassName("main")[0].style.display === 'block') {
+            clearInterval(timeoutID);
+            console.log("done");
+            return result;
+        } else {
+            console.log("main is null");
+        }
+    }, 500);
+};
+
 function plotForcast(forcastData) {
     var timeStamp = forcastData.time.map(item => {
         var date1 = new Date(item.startTime).getTime();
@@ -69,81 +111,128 @@ function updateObserveData(ObserveData) {
     document.getElementById('wdir').className = 'wi wi-wind ' + 'from-' + wdir + '-deg';
 };
 
-async function getPast12hrObserveData() {
-    const cors = 'https://api.allorigins.win/raw?url=';
-    const urlCWB = cors + 'https://www.cwb.gov.tw/V8/C/W/Observe/MOD/24hr/46688.html?';
-    let cwbObserve = await fetch(urlCWB).then(res => { return res.text() })
-        .then(result => {
-            var $dom = $('<html>').html(result),
-                alltd = $('td', $dom),
-                temp = [],
-                humd = [],
-                pres = [],
-                wind = [];
-
-            for (var i = 0; i < 720; i += 10) {
-                // 10 data in a oberservation cycle of 10 mins 
-                // console.log($($(alltd[i]).find('span')[0]).text());  // span C & span F
-                // console.log($($(alltd[i + 3]).find('span')[0]).text()); // span wind(float) & span wind(int)
-                // console.log($(alltd[i + 6]).text()); // humd
-                // console.log($(alltd[i + 7]).text()); // pres
-                // console.log($(alltd[i + 8]).text()); // accum.rain
-                temp.push(parseFloat($($(alltd[i]).find('span')[0]).text()));
-                humd.push(parseInt($(alltd[i + 6]).text()));
-                pres.push(parseFloat($(alltd[i + 7]).text()));
-                wind.push(parseFloat($($(alltd[i + 3]).find('span')[0]).text()));
-            };
-            return { temp: temp, humd: humd, pres: pres, wind: wind };
-        }).catch(err => { console.log(err); });
-    return cwbObserve;
-};
 
 function plotPast12hrObserveData(past12hrObserveData) {
+    const padding = 10;
     var ticks = [];
     for (var i = 0; i < 72; i++) {
         ticks.push(i);
     };
-    var d3 = Plotly.d3;
-    var gd3_temp = d3.select('#plotlyTemp').style({ width: '100%', height: '50%' });
+    var tempPlot, humdPlot, presPlot, windPlot;
 
+    var timeoutID = window.setInterval(function () {
+        if (document.getElementsByClassName("main")[0].style.display === 'block') {
+            console.log("done");
+            var boxesInnerHeight = document.getElementsByClassName("overview2-item")[0].clientHeight;
+            var boxesInnerWidth = document.getElementsByClassName("overview2-item")[0].clientWidth + padding * 2;
 
-    var tempData = [
-        {
-            x: ticks,
-            y: past12hrObserveData.temp,
-            type: 'scatter',
-            mode: 'lines',
-            line: {
-                color: 'white',
-                shape: 'spline'
-            },
-        }
-    ];
+            var tempData = [
+                {
+                    x: ticks,
+                    y: past12hrObserveData.temp,
+                    fill: 'tozeroy',
+                    type: 'scatter',
+                    mode: 'lines',
+                    line: {
+                        color: '#86C232',
+                        shape: 'spline'
+                    },
+                }
+            ];
 
-    var layout = {
-        plot_bgcolor: 'rgba(0, 0, 0, 0)',
-        paper_bgcolor: 'rgba(0, 0, 0, 0)',
-        xaxis: {
-            color: 'white',
-        },
-        yaxis: {
-            color: 'white'
-        },
-        margin: {
-            l: 0,
-            r: 0,
-            b: 0,
-            t: 0,
-            pad: 0,
-        }
-    };
+            var humdData = [
+                {
+                    x: ticks,
+                    y: past12hrObserveData.humd,
+                    fill: 'tozeroy',
+                    type: 'scatter',
+                    mode: 'lines',
+                    line: {
+                        color: '#86C232',
+                        shape: 'spline'
+                    },
+                }
+            ];
 
-    var config = {
-        responsive: false,
-        showlegend: false
-    }
-    Plotly.newPlot(gd3_temp.node(), tempData, layout, config);
-};
+            var presData = [
+                {
+                    x: ticks,
+                    y: past12hrObserveData.pres,
+                    fill: 'tozeroy',
+                    type: 'scatter',
+                    mode: 'lines',
+                    line: {
+                        color: '#86C232',
+                        shape: 'spline'
+                    },
+                }
+            ];
+
+            var windData = [
+                {
+                    x: ticks,
+                    y: past12hrObserveData.wind,
+                    fill: 'tozeroy',
+                    type: 'scatter',
+                    mode: 'lines',
+                    line: {
+                        color: '#86C232',
+                        shape: 'spline'
+                    },
+                }
+            ];
+
+            var layout = {
+                autosize: false,
+                width: boxesInnerWidth,
+                height: boxesInnerHeight * 0.4,
+                plot_bgcolor: 'rgba(0, 0, 0, 0)',
+                paper_bgcolor: 'rgba(0, 0, 0, 0)',
+                xaxis: {
+                    color: 'white',
+                    fixedrange: true,
+                    showgrid: false,
+                    visible: false
+                },
+                yaxis: {
+                    color: 'white',
+                    fixedrange: true,
+                    showgrid: false,
+                    visible: false
+                },
+                margin: {
+                    l: 0,
+                    r: 0,
+                    b: 0,
+                    t: 0,
+                    pad: 0,
+                },
+                showlegend: false
+            };
+
+            var config = {
+                responsive: true,
+                showlegend: false,
+                staticPlot: true,
+                displayModeBar: false
+            };
+            tempPlot = Plotly.newPlot('plotlyTemp', tempData, layout, config);
+            humdPlot = Plotly.newPlot('plotlyHumd', humdData, layout, config);
+            presPlot = Plotly.newPlot('plotlyPres', presData, layout, config);
+            windPlot = Plotly.newPlot('plotlyWind', windData, layout, config);
+            clearInterval(timeoutID);
+        } else {
+            console.log("main is null");
+        };
+    }, 500);
+
+    // var timeoutID = setTimeout(function () {
+    //     console.log(document.getElementsByClassName("main")[0].style.display);
+    //     console.log($(".overview2-item").outerHeight());
+    //     checkInit = true;
+    // }, 1000);
+}
+
 
 // Onload 
 window.onload = function () {
@@ -159,7 +248,9 @@ window.onload = function () {
         getCWBObserveData(locationNameObserve).then(data => updateObserveData(data))
     };
 
-    getPast12hrObserveData();//.then(data => plotPast12hrObserveData(data));
+
+    getPast12hrObserveData().then(data => plotPast12hrObserveData(data));
+    // getPast12hrObserveData().then(data => waitMainDivShows(data)).then(data => console.log(data));
     // // Loading page
     // window.addEventListener("load", function () {
     //     $(".loading").delay(1000).fadeOut("slow", function () {

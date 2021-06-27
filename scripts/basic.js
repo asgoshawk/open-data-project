@@ -1,9 +1,13 @@
 // Loading page
+var mainTurnOn = false;
+
 window.addEventListener("load", function () {
     $(".loading").delay(1000).fadeOut("slow", function () {
         $(this).remove();
         $(".main").css({ "display": "block" });
         resizeDivToSquare();
+        mainTurnOn = true;
+        console.log($(".overview2-item").outerHeight());
     });
 });
 

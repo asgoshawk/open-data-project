@@ -239,14 +239,19 @@
 }
 
 .overview2-plotly {
+    overflow: hidden;
     position: absolute;
-    top: 50%;
-    bottom: 0px;
-    height: 50%;
+    right: 0;
+    left: 0;
+    top: 60%;
+    /* bottom: 0%; */
+    /* height: 50%; */
     width: 100%;
+    /* border: 10px solid #000409;
+    border-radius: 20px; */
+    border-radius: 10px;
     /* background-color: #474B4F; */
 }
-
 
 .timeSeries {
     width: 50%;
