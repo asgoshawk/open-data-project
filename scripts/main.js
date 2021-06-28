@@ -16,7 +16,7 @@ async function getCWBObserveData(locationName) {
     return cwbObserve;
 };
 
-async function getPast12hrObserveData() {
+async function getPast24hrObserveData() {
     const cors = 'https://api.allorigins.win/raw?url=';
     const urlCWB = cors + 'https://www.cwb.gov.tw/V8/C/W/Observe/MOD/24hr/46688.html?';
     let cwbObserve = await fetch(urlCWB).then(res => { return res.text() })
@@ -28,7 +28,7 @@ async function getPast12hrObserveData() {
                 pres = [],
                 wind = [];
 
-            for (var i = 0; i < 720; i += 10) {
+            for (var i = 0; i < 1440; i += 10) {
                 // 10 data in a oberservation cycle of 10 mins 
                 // console.log($($(alltd[i]).find('span')[0]).text());  // span C & span F
                 // console.log($($(alltd[i + 3]).find('span')[0]).text()); // span wind(float) & span wind(int)
@@ -40,7 +40,7 @@ async function getPast12hrObserveData() {
                 pres.push(parseFloat($(alltd[i + 7]).text()));
                 wind.push(parseFloat($($(alltd[i + 3]).find('span')[0]).text()));
             };
-            return { temp: temp, humd: humd, pres: pres, wind: wind };
+            return { temp: temp.reverse(), humd: humd.reverse(), pres: pres.reverse(), wind: wind.reverse() };
         }).catch(err => { console.log(err); });
     return cwbObserve;
 };
@@ -111,91 +111,43 @@ function updateObserveData(ObserveData) {
     document.getElementById('wdir').className = 'wi wi-wind ' + 'from-' + wdir + '-deg';
 };
 
-
-function plotPast12hrObserveData(past12hrObserveData) {
+function plotPast24hrObserveData(past24hrObserveData) {
     const padding = 10;
+    var checkPlotsExist = false;
     var ticks = [];
-    for (var i = 0; i < 72; i++) {
+    for (var i = 0; i < 144; i++) {
         ticks.push(i);
     };
-    var tempPlot, humdPlot, presPlot, windPlot;
 
-    var timeoutID = window.setInterval(function () {
+    function plot4WeatherElements() {
         if (document.getElementsByClassName("main")[0].style.display === 'block') {
             console.log("done");
+            clearInterval(timeoutID);
             var boxesInnerHeight = document.getElementsByClassName("overview2-item")[0].clientHeight;
             var boxesInnerWidth = document.getElementsByClassName("overview2-item")[0].clientWidth + padding * 2;
-
-            var tempData = [
-                {
-                    x: ticks,
-                    y: past12hrObserveData.temp,
-                    fill: 'tozeroy',
-                    type: 'scatter',
-                    mode: 'lines',
-                    line: {
-                        color: '#86C232',
-                        shape: 'spline'
-                    },
+            var commonDataSetting = {
+                x: ticks,
+                fill: 'tozeroy',
+                type: 'scatter',
+                mode: 'lines',
+                line: {
+                    color: '#86C232',
+                    shape: 'spline'
                 }
-            ];
+            };
 
-            var humdData = [
-                {
-                    x: ticks,
-                    y: past12hrObserveData.humd,
-                    fill: 'tozeroy',
-                    type: 'scatter',
-                    mode: 'lines',
-                    line: {
-                        color: '#86C232',
-                        shape: 'spline'
-                    },
-                }
-            ];
-
-            var presData = [
-                {
-                    x: ticks,
-                    y: past12hrObserveData.pres,
-                    fill: 'tozeroy',
-                    type: 'scatter',
-                    mode: 'lines',
-                    line: {
-                        color: '#86C232',
-                        shape: 'spline'
-                    },
-                }
-            ];
-
-            var windData = [
-                {
-                    x: ticks,
-                    y: past12hrObserveData.wind,
-                    fill: 'tozeroy',
-                    type: 'scatter',
-                    mode: 'lines',
-                    line: {
-                        color: '#86C232',
-                        shape: 'spline'
-                    },
-                }
-            ];
-
-            var layout = {
+            var commonLayout = {
                 autosize: false,
                 width: boxesInnerWidth,
                 height: boxesInnerHeight * 0.4,
                 plot_bgcolor: 'rgba(0, 0, 0, 0)',
                 paper_bgcolor: 'rgba(0, 0, 0, 0)',
                 xaxis: {
-                    color: 'white',
                     fixedrange: true,
                     showgrid: false,
                     visible: false
                 },
                 yaxis: {
-                    color: 'white',
                     fixedrange: true,
                     showgrid: false,
                     visible: false
@@ -216,23 +168,61 @@ function plotPast12hrObserveData(past12hrObserveData) {
                 staticPlot: true,
                 displayModeBar: false
             };
-            tempPlot = Plotly.newPlot('plotlyTemp', tempData, layout, config);
-            humdPlot = Plotly.newPlot('plotlyHumd', humdData, layout, config);
-            presPlot = Plotly.newPlot('plotlyPres', presData, layout, config);
-            windPlot = Plotly.newPlot('plotlyWind', windData, layout, config);
-            clearInterval(timeoutID);
+
+            var tempData = Object.assign({}, commonDataSetting, {
+                y: past24hrObserveData.temp,
+            });
+
+            var humdData = Object.assign({}, commonDataSetting, {
+                y: past24hrObserveData.humd,
+            });
+
+            var presData = Object.assign({}, commonDataSetting, {
+                y: past24hrObserveData.pres,
+            });
+
+            var windData = Object.assign({}, commonDataSetting, {
+                y: past24hrObserveData.wind,
+            });
+
+            var presLayout = Object.assign({}, commonLayout, {
+                yaxis: {
+                    autorange: false,
+                    showgrid: false,
+                    visible: false,
+                    range: [900, 1050]
+                },
+            });
+
+            tempPlot = Plotly.newPlot('plotlyTemp', [tempData], commonLayout, config);
+            humdPlot = Plotly.newPlot('plotlyHumd', [humdData], commonLayout, config);
+            presPlot = Plotly.newPlot('plotlyPres', [presData], presLayout, config);
+            windPlot = Plotly.newPlot('plotlyWind', [windData], commonLayout, config);
+
+            checkPlotsExist = true;
         } else {
             console.log("main is null");
         };
-    }, 500);
+    };
 
-    // var timeoutID = setTimeout(function () {
-    //     console.log(document.getElementsByClassName("main")[0].style.display);
-    //     console.log($(".overview2-item").outerHeight());
-    //     checkInit = true;
-    // }, 1000);
-}
+    var timeoutID = window.setInterval(plot4WeatherElements, 500);
 
+    window.addEventListener('resize', function () {
+        if (checkPlotsExist) {
+            var boxesInnerHeight = document.getElementsByClassName("overview2-item")[0].clientHeight;
+            var boxesInnerWidth = document.getElementsByClassName("overview2-item")[0].clientWidth + padding * 2;
+            var updateLayout = {
+                width: boxesInnerWidth,
+                height: boxesInnerHeight * 0.4,
+            };
+            Plotly.relayout('plotlyTemp', updateLayout);
+            Plotly.relayout('plotlyHumd', updateLayout);
+            Plotly.relayout('plotlyPres', updateLayout);
+            Plotly.relayout('plotlyWind', updateLayout);
+        }
+    });
+
+};
 
 // Onload 
 window.onload = function () {
@@ -249,7 +239,7 @@ window.onload = function () {
     };
 
 
-    getPast12hrObserveData().then(data => plotPast12hrObserveData(data));
+    getPast24hrObserveData().then(data => plotPast24hrObserveData(data));
     // getPast12hrObserveData().then(data => waitMainDivShows(data)).then(data => console.log(data));
     // // Loading page
     // window.addEventListener("load", function () {
