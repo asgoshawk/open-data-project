@@ -57,22 +57,17 @@
                 <a href="#"><span><i class="fas fa-feather-alt"></i> AsGoshawk</span></a>
             </div>
             <div class="navbar-list">
-                <a href="#" style="text-decoration: none;">
+                <a href="#link1" style="text-decoration: none;">
                     <div class="navbar-item active">
                         <span>Observation</span>
                     </div>
                 </a>
-                <a href="#" style="text-decoration: none;">
+                <a href="#link2" style="text-decoration: none;">
                     <div class="navbar-item">
                         <span>Forecast</span>
                     </div>
                 </a>
-                <a href="#" style="text-decoration: none;">
-                    <div class="navbar-item">
-                        <span>Air Qulity</span>
-                    </div>
-                </a>
-                <a href="#" style="text-decoration: none;">
+                <a href="#link3" style="text-decoration: none;">
                     <div class="navbar-item">
                         <span>Map</span>
                     </div>
@@ -84,9 +79,8 @@
         </div>
 
         <div class="content">
-
-            <div class="observation">
-                <div class="observation-header">
+            <div class="observation" id="link1">
+                <div class="content-header">
                     <h1>Weather Element</h1>
                     <button class="refresh-data" id="refresh-observation">
                         <i class="fas fa-sync-alt"></i>
@@ -94,6 +88,14 @@
                 </div>
 
                 <div class="overview1">
+                    <div class="location">
+                        <h1>Banciao City</h1>
+                    </div>
+                    <div class="weather-description">
+                        <i id="weather-description-icon"></i>
+                        <div id="weather-description-text"></div>
+                    </div>
+                    <div class="weather-elements"></div>
                 </div>
                 <div class="overview2 temp-pres">
                     <div class="overview2-item temp">
@@ -144,9 +146,23 @@
             </div>
 
             <!-- <img src="https://picsum.photos/1500/800" alt=""> -->
-            <div class="plotForcast">
+            <div class="forcast" id="link2">
+                <div class="content-header">
+                    <h1>Forcast data</h1>
+                </div>
                 <div id="plotlyForcast"></div>
             </div>
+
+            <div class="map" id="link3">
+                <div class="content-header">
+                    <h1>Map info</h1>
+                </div>
+            </div>
+
+            <div class="footer">
+
+            </div>
+
         </div>
 
     </div>

@@ -135,7 +135,7 @@
     flex-direction: row;
 }
 
-.observation-header {
+.content-header {
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -174,6 +174,7 @@
 }
 
 .overview1 {
+    position: relative;
     width: 50%;
     /* max-width: 600px; */
     height: 40vh;
@@ -181,6 +182,35 @@
     background-color: #222629;
     border: 10px solid #000409;
     border-radius: 20px;
+}
+
+.location {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+}
+
+.weather-description {
+    position: absolute;
+    width: 95%;
+    top: 15%;
+    left: 5%;
+}
+
+#weather-description-icon {
+    position: absolute;
+    display: block;
+    /* width: 30%; */
+    font-size: 300px;
+}
+
+#weather-description-text {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    font-size: 45px;
+    text-align: end;
+    color: #6B6E70;
 }
 
 .overview2 {
@@ -228,6 +258,7 @@
 
 .weather-value span {
     display: block;
+    z-index: 10;
 }
 
 .weather-value #pres {
@@ -247,11 +278,8 @@
     /* bottom: 0%; */
     /* height: 50%; */
     width: 100%;
-    /* border: 10px solid #000409;
-    border-radius: 20px; */
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-
     /* background-color: #474B4F; */
 }
 
@@ -265,8 +293,38 @@
     border-radius: 20px;
 }
 
-.plotForcast {
+.forcast {
+    display: flex;
+    /* justify-content:space-evenly; */
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
     width: 100%;
+}
+
+.footer {
+    height: 20vh;
+}
+
+
+@media (max-width: 1200px) {
+    #weather-description-icon {
+        font-size: 250px;
+    }
+    
+    #weather-description-text {
+        font-size: 35px;
+    }
+}
+
+@media (max-width: 992px) {
+    #weather-description-icon {
+        font-size: 200px;
+    }
+    
+    #weather-description-text {
+        font-size: 25px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -289,6 +347,14 @@
         border-radius: 10px;
     }
     
+    #weather-description-icon {
+        font-size: 300px;
+    }
+    
+    #weather-description-text {
+        font-size: 45px;
+    }
+
     .overview2 {
         width: 50%;
         height: 40vh;

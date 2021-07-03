@@ -7,7 +7,6 @@ window.addEventListener("load", function () {
         $(".main").css({ "display": "block" });
         resizeDivToSquare();
         mainTurnOn = true;
-        console.log($(".overview2-item").outerHeight());
     });
 });
 
