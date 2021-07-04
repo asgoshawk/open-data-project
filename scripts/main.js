@@ -61,58 +61,133 @@ async function getPast24hrObserveData() {
 };
 
 function plotForcast(forcastData) {
+    var checkPlotsExist = false;
+    console.log(forcastData);
+    var forcastData = forcastData[1];
+
     var timeStamp = forcastData.time.map(item => {
         var date1 = new Date(item.startTime).getTime();
         var date2 = new Date(item.startTime).getTime();
         return new Date((date1 + date2) / 2);
     });
-    var dataValue = forcastData.time.map(item => item.elementValue[0].value);
 
-    var data = [
-        {
-            x: timeStamp,
-            y: dataValue,
-            type: 'scatter',
-            mode: 'lines',
-            line: {
+
+    // var timeSeriseData = forcastData.time
+
+    function plotTemp(plotH, plotW) {
+
+        var commonLayout = {
+            autosize: false,
+            width: plotW * 0.9,
+            height: plotH * 0.8,
+            plot_bgcolor: 'rgba(0, 0, 0, 0)',
+            paper_bgcolor: 'rgba(0, 0, 0, 0)',
+            xaxis: {
+                // fixedrange: true,
+                gridcolor: '#6B6E70',
                 color: 'white',
-                shape: 'spline'
+                title: {
+                    text: "Forcast Time"
+                }
             },
-        }
-    ];
+            yaxis: {
+                // fixedrange: true,
+                gridcolor: '#6B6E70',
+                color: 'white',
+                title: {
+                    text: "Temperature (°C)"
+                }
+            },
+            margin: {
+                l: 50,
+                r: 0,
+                b: 50,
+                t: 0,
+            },
+            font: {
+                family: "Arial",
+                size: 15,
+            }
+            // showlegend: false
+        };
 
-    var layout = {
-        plot_bgcolor: 'rgba(0, 0, 0, 0)',
-        paper_bgcolor: 'rgba(0, 0, 0, 0)',
-        xaxis: {
-            color: 'white',
-        },
-        yaxis: {
-            color: 'white'
-        }
+
+        var dataValue = forcastData.time.map(item => item.elementValue[0].value);
+
+        var data = [
+            {
+                x: timeStamp,
+                y: dataValue,
+                type: 'scatter',
+                mode: 'lines',
+                line: {
+                    color: '#86C232',
+                    shape: 'spline'
+                },
+            }
+        ];
+
+        var config = { responsive: true }
+        Plotly.newPlot('plotlyForcast', data, commonLayout, config);
     };
 
-    var config = { responsive: true }
-    Plotly.newPlot('plotlyForcast', data, layout, config);
-    // var timeSeriseData = forcastData.time
+    function plotHumd() {
+
+    };
+
+    function plot12PoP() {
+
+    };
+
+    var timeID = setInterval(() => {
+        if (mainTurnOn) {
+            var boxesInnerHeight = document.getElementsByClassName("forcast-content")[0].clientHeight;
+            var boxesInnerWidth = document.getElementsByClassName("forcast-content")[0].clientWidth;
+
+            plotTemp(boxesInnerHeight, boxesInnerWidth);
+            clearInterval(timeID);
+            checkPlotsExist = true;
+        };
+    }, 500);
+
+    window.addEventListener('resize', function () {
+        if (checkPlotsExist) {
+            var boxesInnerHeight = document.getElementsByClassName("forcast-content")[0].clientHeight;
+            var boxesInnerWidth = document.getElementsByClassName("forcast-content")[0].clientWidth;
+            var updateLayout = {
+                width: boxesInnerWidth * 0.9,
+                height: boxesInnerHeight * 0.8,
+            };
+            Plotly.relayout('plotlyForcast', updateLayout);
+        }
+    });
+
 };
 
 function updateObserveData(ObserveData) {
     let location = { lat: ObserveData.lat, lon: ObserveData.lon };
     let obsWeather = ObserveData.weatherElement;
-    console.log(ObserveData);
-    var wdir = obsWeather[1].elementValue;
-    var wdsd = obsWeather[2].elementValue;
-    var temp = obsWeather[3].elementValue;
-    var humd = parseFloat(obsWeather[4].elementValue * 100);
-    var pres = obsWeather[5].elementValue;
-    var updateTime = ObserveData.time.obsTime;
+    // console.log(ObserveData);
+    let wdir = obsWeather[1].elementValue;
+    let wdsd = Math.round((parseFloat(obsWeather[2].elementValue) * 10) / 10).toFixed(1);
+    let temp = Math.round((parseFloat(obsWeather[3].elementValue) * 10) / 10).toFixed(1);
+    let humd = Math.round(parseFloat(obsWeather[4].elementValue * 100));
+    let pres = Math.round(parseFloat(obsWeather[5].elementValue));
+    let uv = Math.round(parseFloat(obsWeather[13].elementValue));
+    let vis = obsWeather[19].elementValue;
+    let precip = Math.round(parseFloat(obsWeather[6].elementValue));
+
+    let updateTime = ObserveData.time.obsTime;
 
     document.getElementById('temp').innerHTML = temp;
-    document.getElementById('humd').innerHTML = humd.toString();
+    document.getElementById('humd').innerHTML = humd;
     document.getElementById('pres').innerHTML = pres;
     document.getElementById('wind').innerHTML = wdsd + ' ';
     document.getElementById('wdir').className = 'wi wi-wind ' + 'from-' + wdir + '-deg';
+
+    document.getElementById('uv-index').innerHTML = (uv >= 0) ? uv : "N/A";
+    document.getElementById('visibility').innerHTML = vis;
+    document.getElementById('precipitaion-24h').innerHTML = precip;
 
     updateWeatherDescription(obsWeather[20].elementValue, updateTime);
     return location;
@@ -148,7 +223,7 @@ function plotPast24hrObserveData(past24hrObserveData) {
 
     function plot4WeatherElements() {
         if (document.getElementsByClassName("main")[0].style.display === 'block') {
-            console.log("done");
+            console.log("Loaded completely.");
             clearInterval(timeoutID);
             var boxesInnerHeight = document.getElementsByClassName("overview2-item")[0].clientHeight;
             var boxesInnerWidth = document.getElementsByClassName("overview2-item")[0].clientWidth + padding * 2;
@@ -255,7 +330,7 @@ function plotPast24hrObserveData(past24hrObserveData) {
 
             checkPlotsExist = true;
         } else {
-            console.log("main is null");
+            console.log("Wait for main div loaded.");
         };
     };
 
@@ -280,9 +355,8 @@ function plotPast24hrObserveData(past24hrObserveData) {
 
 function updateWeatherDescription(description, time) {
     var dateTime = new Date(time);
-    console.log(dateTime.getHours());
-    var clearDayNight = (dateTime.getHours() >= 6 && dateTime.getHours() <= 6) ? "sunny" : "clear";
-    var clearDayNightText = (dateTime.getHours() >= 6 && dateTime.getHours() <= 6) ? "Day" : "Night";
+    var clearDayNight = (dateTime.getHours() >= 6 && dateTime.getHours() <= 18) ? "wi-day-sunny" : "wi-night-clear";
+    var clearDayNightText = (dateTime.getHours() >= 6 && dateTime.getHours() <= 18) ? "Day" : "Night";
     let cssCode =
         (description.search("晴") > -1) ? clearDayNight :
             (description.search("有霾") > -1 || description.search("有靄") > -1) ? "wi-dust" :
@@ -314,27 +388,48 @@ function updateWeatherDescription(description, time) {
 // Onload 
 window.onload = function () {
     var locationNameForcast = "板橋區";
-    getCWBForcastData(locationNameForcast).then(data => plotForcast(data[1]));
-
+    getCWBForcastData(locationNameForcast).then(data => plotForcast(data));
 
     var locationNameObserve = "板橋";
     getCWBObserveData(locationNameObserve).then(data => updateObserveData(data));
-
 
     document.getElementById('refresh-observation').onclick = function () {
         getCWBObserveData(locationNameObserve).then(data => updateObserveData(data))
     };
 
-
     getPast24hrObserveData().then(data => plotPast24hrObserveData(data));
-    // getPast12hrObserveData().then(data => waitMainDivShows(data)).then(data => console.log(data));
-    // // Loading page
-    // window.addEventListener("load", function () {
-    //     $(".loading").delay(1000).fadeOut("slow", function () {
-    //         $(this).remove();
-    //         $(".main").css({ "display": "block" });
-    //     });
-    // });
+
+    mapboxToken = config.mapbox_Auth;
+    const mymap = L.map('mapid').setView([24.999447, 121.433812], 8);
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+        maxZoom: 20,
+        attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+    }).addTo(mymap);
+
+    let urlRadar = "https://opendata.cwb.gov.tw/fileapi/opendata/MSC/O-A0058-005.png";
+    let imageBounds = [[17.75, 115.0], [29.25, 126.5]];
+    L.imageOverlay(urlRadar, imageBounds).addTo(mymap);
+
+    var timeIDForMap = setInterval(() => {
+        if (mainTurnOn) {
+            mymap.invalidateSize();
+            clearInterval(timeIDForMap)
+        }
+    }, 500);
+
+    // Get Radar time
+    fetch("https://opendata.cwb.gov.tw/fileapi/v1/opendataapi/O-A0058-005?Authorization=CWB-8A2389CC-DCF3-45E8-B410-305B35B47F5B&downloadType=WEB&format=JSON")
+        .then(res => res.json()).then(data => {
+            let dTime = new Date(data.cwbopendata.dataset.time.obsTime);
+            let date = [dTime.getFullYear(), dTime.getMonth() + 1, dTime.getDate()].join("/");
+            let hour = (dTime.getHours() < 10) ? "0" : "" + dTime.getHours();
+            let min = (dTime.getMinutes() < 10) ? "0" : "" + dTime.getMinutes();
+            let time = [hour, min].join(":");
+            let timeStr = "Last update : " + date + " " + time;
+            document.getElementById("radar-update-time").innerHTML = timeStr;
+            // console.log(timeStr);
+        })
+        .catch(err => { console.log(err) })
 
 };
 

@@ -23,6 +23,9 @@
     <!-- Plotly -->
     <script src="./dist/js/plotly-2.0.0.min.js"></script>
 
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 
 <body>
@@ -54,7 +57,12 @@
     <div class="main">
         <div class="navbar">
             <div class="brand">
-                <a href="#"><span><i class="fas fa-feather-alt"></i> AsGoshawk</span></a>
+                <a href="#">
+                    <span>
+                        <i class="fas fa-feather-alt"></i>
+                        <p class="brand-text"> AsGoshawk</p>
+                    </span>
+                </a>
             </div>
             <div class="navbar-list">
                 <a href="#link1" style="text-decoration: none;">
@@ -69,7 +77,7 @@
                 </a>
                 <a href="#link3" style="text-decoration: none;">
                     <div class="navbar-item">
-                        <span>Map</span>
+                        <span>Radar Map</span>
                     </div>
                 </a>
             </div>
@@ -94,6 +102,20 @@
                     <div class="weather-description">
                         <i id="weather-description-icon"></i>
                         <div id="weather-description-text"></div>
+                    </div>
+                    <div class="other-index">
+                        <div class="sub-other-index">
+                            <p> UV Index : </p>
+                            <p id="uv-index">N/A</p>
+                        </div>
+                        <div class="sub-other-index">
+                            <p> Visibility (Km) : </p>
+                            <p id="visibility">N/A</p>
+                        </div>
+                        <div class="sub-other-index">
+                            <p>Accum. Precip. (24hr, mm) : </p>
+                            <p id="precipitaion-24h">N/A</p>
+                        </div>
                     </div>
                     <div class="weather-elements"></div>
                 </div>
@@ -131,18 +153,10 @@
                     </div>
                 </div>
 
-                <div class="timeSeries">
-
-                </div>
-                <div class="timeSeries">
-
-                </div>
                 <!-- <div class="timeSeries">
 
-                </div>
-                <div class="timeSeries">
-
                 </div> -->
+
             </div>
 
             <!-- <img src="https://picsum.photos/1500/800" alt=""> -->
@@ -150,17 +164,54 @@
                 <div class="content-header">
                     <h1>Forcast data</h1>
                 </div>
-                <div id="plotlyForcast"></div>
+                <div class="forcast-content">
+                    <div class="forcast-btn-list">
+                        <button class="forcast-btn" id="forcast-temp">Temperature (<sup>o</sup>C)</button>
+                        <button class="forcast-btn" id="forcast-rh">Averaged RH (%)</button>
+                        <button class="forcast-btn" id="forcast-pop">12 hr PoP (%)</button>
+                    </div>
+                    <div id="plotlyForcast"></div>
+                </div>
+
             </div>
 
             <div class="map" id="link3">
                 <div class="content-header">
-                    <h1>Map info</h1>
+                    <h1>Radar Map</h1>
                 </div>
+                <div class="map-content">
+                    <p id="radar-update-time">Last Update: </p>
+                    <div id="mapid"></div>
+                </div>
+
             </div>
 
             <div class="footer">
-
+                <div class="footer-content1">
+                    <div class="footer-contact">
+                        <h2>Contact</h2>
+                        <ul class="contact-list">
+                            <li><i class="fas fa-map-marker-alt"></i> No.1, Sec. 4, Roosevelt Road, Taipei, 10617
+                                Taiwan.
+                            </li>
+                            <li><i class="fas fa-envelope"></i> @ntu.edu.tw</li>
+                            <li><i class="fab fa-github-square"></i> <a style="text-decoration: none;"
+                                    href="https://github.com/asgoshawk/open-data-project">
+                                    asgoshawk/open-data-project</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-content2">
+                    <h2>About</h2>
+                    <p>This webpage is the final project of static webpage design lesson and also the practice of
+                        applying the CWB open data API. More information of the API is availiable
+                        <a style="text-decoration: none;" href="https://opendata.cwb.gov.tw/index">here</a>.
+                    </p>
+                </div>
+                <div class="footer-content3">
+                    <p> Copyright &copy; 2021 AsGoshawk. All rights reserved. </p>
+                </div>
             </div>
 
         </div>
