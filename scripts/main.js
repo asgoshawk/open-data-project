@@ -565,8 +565,8 @@ window.onload = function () {
         .then(res => res.json()).then(data => {
             let dTime = new Date(data.cwbopendata.dataset.time.obsTime);
             let date = [dTime.getFullYear(), dTime.getMonth() + 1, dTime.getDate()].join("/");
-            let hour = (dTime.getHours() < 10) ? "0" : "" + dTime.getHours();
-            let min = (dTime.getMinutes() < 10) ? "0" : "" + dTime.getMinutes();
+            let hour = (dTime.getHours() < 10 ? "0" : "") + dTime.getHours();
+            let min = (dTime.getMinutes() < 10 ? "0" : "") + dTime.getMinutes();
             let time = [hour, min].join(":");
             let timeStr = "Last update : " + date + " " + time;
             document.getElementById("radar-update-time").innerHTML = timeStr;
