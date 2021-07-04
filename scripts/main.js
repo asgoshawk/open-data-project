@@ -401,9 +401,11 @@ window.onload = function () {
 
     mapboxToken = config.mapbox_Auth;
     const mymap = L.map('mapid').setView([24.999447, 121.433812], 8);
-    L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+    L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         maxZoom: 20,
-        attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+        id: 'dark-v10',
+        accessToken: mapboxToken,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
     }).addTo(mymap);
 
     let urlRadar = "https://opendata.cwb.gov.tw/fileapi/opendata/MSC/O-A0058-005.png";
