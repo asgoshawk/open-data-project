@@ -88,26 +88,24 @@ function plotForcast(forcastData) {
                     text: "Forcast Time"
                 }
             },
-            yaxis: {
-                // fixedrange: true,
-                // showgrid: false,
-                gridcolor: '#6B6E70',
-                color: 'white',
-                title: {
-                    text: "Temperature (°C)"
-                }
-            },
             margin: {
                 l: 50,
                 r: 0,
-                b: 50,
+                b: 70,
                 t: 0,
             },
             font: {
                 family: "Arial",
                 size: 15,
-            }
-            // showlegend: false
+                color: 'white'
+            },
+            legend: {
+                x: 1,
+                xanchor: 'right',
+                y: 1,
+                bgcolor: '#222629'
+            },
+            showlegend: true
         };
 
         var tempAvg = forcastData[1].time.map(item => item.elementValue[0].value);
@@ -155,9 +153,21 @@ function plotForcast(forcastData) {
                 name: 'Avg. Dew point'
             },
         ];
+        var lowerLimit = min(...dewpAvg) - (max(...tempMax) - min(...dewpAvg)) * 0.1;
+        var upperLimit = max(...tempMax) + (max(...tempMax) - min(...dewpAvg)) * 0.2;
+        var newLayout = Object.assign({}, commonLayout, {
+            yaxis: {
+                gridcolor: '#6B6E70',
+                color: 'white',
+                title: {
+                    text: "Temperature (°C)"
+                },
+                range: [lowerLimit, upperLimit]
+            },
+        });
 
         var config = { responsive: true }
-        Plotly.newPlot('plotlyForcast', data, commonLayout, config);
+        Plotly.newPlot('plotlyForcast', data, newLayout, config);
     };
 
     function plotHumd(plotH, plotW) {
@@ -176,24 +186,22 @@ function plotForcast(forcastData) {
                     text: "Forcast Time"
                 }
             },
-            yaxis: {
-                // fixedrange: true,
-                // showgrid: false,
-                gridcolor: '#6B6E70',
-                color: 'white',
-                title: {
-                    text: "RH (%)"
-                }
-            },
             margin: {
                 l: 50,
                 r: 0,
-                b: 50,
+                b: 70,
                 t: 0,
             },
             font: {
                 family: "Arial",
                 size: 15,
+                color: 'white'
+            },
+            legend: {
+                x: 1,
+                xanchor: 'right',
+                y: 1,
+                bgcolor: '#222629'
             },
             showlegend: true
         };
@@ -214,9 +222,22 @@ function plotForcast(forcastData) {
             },
         ];
 
+        var lowerLimit = max((min(...rhAvg) - (max(...rhAvg) - min(...rhAvg)) * 0.1), 0);
+        var upperLimit = max(...rhAvg) + (max(...rhAvg) - min(...rhAvg)) * 0.15;
+        var newLayout = Object.assign({}, commonLayout, {
+            yaxis: {
+                gridcolor: '#6B6E70',
+                color: 'white',
+                title: {
+                    text: "RH (%)"
+                },
+                range: [lowerLimit, upperLimit]
+            },
+        });
+
         var config = { responsive: true }
         Plotly.purge('plotlyForcast');
-        Plotly.newPlot('plotlyForcast', data, commonLayout, config);
+        Plotly.newPlot('plotlyForcast', data, newLayout, config);
     };
 
     function plot12PoP(plotH, plotW) {
@@ -236,24 +257,22 @@ function plotForcast(forcastData) {
                 },
                 range: [timeStamp[0], timeStamp[6]]
             },
-            yaxis: {
-                // fixedrange: true,
-                // showgrid: false,
-                gridcolor: '#6B6E70',
-                color: 'white',
-                title: {
-                    text: "Probability of precipitation (%)"
-                }
-            },
             margin: {
                 l: 50,
                 r: 0,
-                b: 50,
+                b: 70,
                 t: 0,
             },
             font: {
                 family: "Arial",
                 size: 15,
+                color: 'white'
+            },
+            legend: {
+                x: 1,
+                xanchor: 'right',
+                y: 1,
+                bgcolor: '#222629'
             },
             showlegend: true
         };
@@ -274,16 +293,29 @@ function plotForcast(forcastData) {
             },
         ];
 
+
+        var lowerLimit = max((min(...pop12hr) - (max(...pop12hr) - min(...pop12hr)) * 0.1), 0);
+        var upperLimit = max(...pop12hr) + (max(...pop12hr) - min(...pop12hr)) * 0.15;
+        var newLayout = Object.assign({}, commonLayout, {
+            yaxis: {
+                gridcolor: '#6B6E70',
+                color: 'white',
+                title: {
+                    text: "Probability of precipitation (%)"
+                },
+                range: [lowerLimit, upperLimit]
+            },
+        });
+
         var config = { responsive: true }
         Plotly.purge('plotlyForcast');
-        Plotly.newPlot('plotlyForcast', data, commonLayout, config);
+        Plotly.newPlot('plotlyForcast', data, newLayout, config);
     };
 
     var timeID = setInterval(() => {
         if (mainTurnOn) {
             boxesInnerHeight = document.getElementsByClassName("forcast-content")[0].clientHeight;
             boxesInnerWidth = document.getElementsByClassName("forcast-content")[0].clientWidth;
-
             plotTemp(boxesInnerHeight, boxesInnerWidth);
             clearInterval(timeID);
             checkPlotsExist = true;
