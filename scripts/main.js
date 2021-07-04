@@ -62,20 +62,17 @@ async function getPast24hrObserveData() {
 
 function plotForcast(forcastData) {
     var checkPlotsExist = false;
-    console.log(forcastData);
-    var forcastData = forcastData[1];
+    var boxesInnerHeight = 0,
+        boxesInnerWidth = 0;
+    // console.log(forcastData);
 
-    var timeStamp = forcastData.time.map(item => {
+    var timeStamp = forcastData[1].time.map(item => {
         var date1 = new Date(item.startTime).getTime();
         var date2 = new Date(item.startTime).getTime();
         return new Date((date1 + date2) / 2);
     });
 
-
-    // var timeSeriseData = forcastData.time
-
     function plotTemp(plotH, plotW) {
-
         var commonLayout = {
             autosize: false,
             width: plotW * 0.9,
@@ -84,6 +81,7 @@ function plotForcast(forcastData) {
             paper_bgcolor: 'rgba(0, 0, 0, 0)',
             xaxis: {
                 // fixedrange: true,
+                showgrid: false,
                 gridcolor: '#6B6E70',
                 color: 'white',
                 title: {
@@ -92,6 +90,7 @@ function plotForcast(forcastData) {
             },
             yaxis: {
                 // fixedrange: true,
+                // showgrid: false,
                 gridcolor: '#6B6E70',
                 color: 'white',
                 title: {
@@ -111,38 +110,179 @@ function plotForcast(forcastData) {
             // showlegend: false
         };
 
+        var tempAvg = forcastData[1].time.map(item => item.elementValue[0].value);
+        var tempMin = forcastData[8].time.map(item => item.elementValue[0].value);
+        var tempMax = forcastData[12].time.map(item => item.elementValue[0].value);
+        var dewpAvg = forcastData[14].time.map(item => item.elementValue[0].value);
 
-        var dataValue = forcastData.time.map(item => item.elementValue[0].value);
+        var dTMax = [],
+            dTMin = [];
+
+        for (let i = 0; i < tempAvg.length; i++) {
+            dTMax.push(tempMax[i] - tempAvg[i]);
+            dTMin.push(tempAvg[i] - tempMin[i]);
+        };
 
         var data = [
             {
                 x: timeStamp,
-                y: dataValue,
+                y: tempAvg,
+                error_y: {
+                    type: 'data',
+                    symmetric: false,
+                    array: dTMax,
+                    arrayminus: dTMin,
+                    color: '#61892F',
+                    opacity: 0.8
+                },
                 type: 'scatter',
                 mode: 'lines',
                 line: {
                     color: '#86C232',
                     shape: 'spline'
                 },
-            }
+                name: 'Avg. Temp.'
+            },
+            {
+                x: timeStamp,
+                y: dewpAvg,
+                type: 'scatter',
+                mode: 'lines',
+                line: {
+                    color: '#0097C8',
+                    shape: 'spline'
+                },
+                name: 'Avg. Dew point'
+            },
         ];
 
         var config = { responsive: true }
         Plotly.newPlot('plotlyForcast', data, commonLayout, config);
     };
 
-    function plotHumd() {
+    function plotHumd(plotH, plotW) {
+        var commonLayout = {
+            autosize: false,
+            width: plotW * 0.9,
+            height: plotH * 0.8,
+            plot_bgcolor: 'rgba(0, 0, 0, 0)',
+            paper_bgcolor: 'rgba(0, 0, 0, 0)',
+            xaxis: {
+                // fixedrange: true,
+                showgrid: false,
+                gridcolor: '#6B6E70',
+                color: 'white',
+                title: {
+                    text: "Forcast Time"
+                }
+            },
+            yaxis: {
+                // fixedrange: true,
+                // showgrid: false,
+                gridcolor: '#6B6E70',
+                color: 'white',
+                title: {
+                    text: "RH (%)"
+                }
+            },
+            margin: {
+                l: 50,
+                r: 0,
+                b: 50,
+                t: 0,
+            },
+            font: {
+                family: "Arial",
+                size: 15,
+            },
+            showlegend: true
+        };
 
+        var rhAvg = forcastData[2].time.map(item => item.elementValue[0].value);
+
+        var data = [
+            {
+                x: timeStamp,
+                y: rhAvg,
+                type: 'scatter',
+                mode: 'lines',
+                line: {
+                    color: '#86C232',
+                    shape: 'spline'
+                },
+                name: 'Avg. RH'
+            },
+        ];
+
+        var config = { responsive: true }
+        Plotly.purge('plotlyForcast');
+        Plotly.newPlot('plotlyForcast', data, commonLayout, config);
     };
 
-    function plot12PoP() {
+    function plot12PoP(plotH, plotW) {
+        var commonLayout = {
+            autosize: false,
+            width: plotW * 0.9,
+            height: plotH * 0.8,
+            plot_bgcolor: 'rgba(0, 0, 0, 0)',
+            paper_bgcolor: 'rgba(0, 0, 0, 0)',
+            xaxis: {
+                // fixedrange: true,
+                showgrid: false,
+                gridcolor: '#6B6E70',
+                color: 'white',
+                title: {
+                    text: "Forcast Time"
+                },
+                range: [timeStamp[0], timeStamp[6]]
+            },
+            yaxis: {
+                // fixedrange: true,
+                // showgrid: false,
+                gridcolor: '#6B6E70',
+                color: 'white',
+                title: {
+                    text: "Probability of precipitation (%)"
+                }
+            },
+            margin: {
+                l: 50,
+                r: 0,
+                b: 50,
+                t: 0,
+            },
+            font: {
+                family: "Arial",
+                size: 15,
+            },
+            showlegend: true
+        };
 
+        var pop12hr = forcastData[0].time.map(item => item.elementValue[0].value);
+
+        var data = [
+            {
+                x: timeStamp,
+                y: pop12hr,
+                type: 'scatter',
+                mode: 'lines',
+                line: {
+                    color: '#86C232',
+                    shape: 'spline'
+                },
+                name: 'PoP'
+            },
+        ];
+
+        var config = { responsive: true }
+        Plotly.purge('plotlyForcast');
+        Plotly.newPlot('plotlyForcast', data, commonLayout, config);
     };
 
     var timeID = setInterval(() => {
         if (mainTurnOn) {
-            var boxesInnerHeight = document.getElementsByClassName("forcast-content")[0].clientHeight;
-            var boxesInnerWidth = document.getElementsByClassName("forcast-content")[0].clientWidth;
+            boxesInnerHeight = document.getElementsByClassName("forcast-content")[0].clientHeight;
+            boxesInnerWidth = document.getElementsByClassName("forcast-content")[0].clientWidth;
 
             plotTemp(boxesInnerHeight, boxesInnerWidth);
             clearInterval(timeID);
@@ -152,14 +292,26 @@ function plotForcast(forcastData) {
 
     window.addEventListener('resize', function () {
         if (checkPlotsExist) {
-            var boxesInnerHeight = document.getElementsByClassName("forcast-content")[0].clientHeight;
-            var boxesInnerWidth = document.getElementsByClassName("forcast-content")[0].clientWidth;
+            boxesInnerHeight = document.getElementsByClassName("forcast-content")[0].clientHeight;
+            boxesInnerWidth = document.getElementsByClassName("forcast-content")[0].clientWidth;
             var updateLayout = {
                 width: boxesInnerWidth * 0.9,
                 height: boxesInnerHeight * 0.8,
             };
             Plotly.relayout('plotlyForcast', updateLayout);
         }
+    });
+
+    document.getElementById("forcast-temp").addEventListener("click", () => {
+        plotTemp(boxesInnerHeight, boxesInnerWidth)
+    });
+
+    document.getElementById("forcast-rh").addEventListener("click", () => {
+        plotHumd(boxesInnerHeight, boxesInnerWidth)
+    });
+
+    document.getElementById("forcast-pop").addEventListener("click", () => {
+        plot12PoP(boxesInnerHeight, boxesInnerWidth)
     });
 
 };
@@ -192,18 +344,6 @@ function updateObserveData(ObserveData) {
     updateWeatherDescription(obsWeather[20].elementValue, updateTime);
     return location;
 };
-
-// function getPast24hrData(location) {
-//     var api = "http://history.openweathermap.org/data/2.5/history/city?",
-//         loc = "lat=" + location.lat + "&lon=" + location.lon + "&",
-//         type = "type=hour&"
-//     key = "appid=" + config.OpenWeather_Auth;
-//     let url = api + loc + type + key;
-//     console.log("myurl:" + url);
-//     fetch(url).then(res => { return res.json() })
-//         .then(result => { console.log(result); })
-//         .catch(err => { console.log(err) })
-// }
 
 function plotPast24hrObserveData(past24hrObserveData) {
     const padding = 10;
@@ -350,7 +490,6 @@ function plotPast24hrObserveData(past24hrObserveData) {
             Plotly.relayout('plotlyWind', updateLayout);
         }
     });
-
 };
 
 function updateWeatherDescription(description, time) {
@@ -383,8 +522,8 @@ function updateWeatherDescription(description, time) {
 
     document.getElementById('weather-description-icon').className = "wi " + cssCode;
     document.getElementById('weather-description-text').innerHTML = descriptionText;
+};
 
-}
 // Onload 
 window.onload = function () {
     var locationNameForcast = "板橋區";
@@ -392,12 +531,14 @@ window.onload = function () {
 
     var locationNameObserve = "板橋";
     getCWBObserveData(locationNameObserve).then(data => updateObserveData(data));
+    getPast24hrObserveData().then(data => plotPast24hrObserveData(data));
 
     document.getElementById('refresh-observation').onclick = function () {
-        getCWBObserveData(locationNameObserve).then(data => updateObserveData(data))
+        getCWBObserveData(locationNameObserve).then(data => updateObserveData(data));
+        getPast24hrObserveData().then(data => plotPast24hrObserveData(data));
     };
 
-    getPast24hrObserveData().then(data => plotPast24hrObserveData(data));
+
 
     mapboxToken = config.mapbox_Auth;
     const mymap = L.map('mapid').setView([24.999447, 121.433812], 8);
