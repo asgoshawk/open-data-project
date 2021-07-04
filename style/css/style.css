@@ -124,6 +124,7 @@
 .content {
     margin-left: 180px;
     margin-right: 30px;
+    padding-top: 30px;
     color: white;
     overflow: hidden;
 }
@@ -210,7 +211,6 @@
 #weather-description-text {
     position: absolute;
     /* display: flex; */
-    
     right: 5%;
     font-size: 2.5vw;
     text-align: end;
@@ -292,11 +292,11 @@
     z-index: 10;
 }
 
-.weather-value #pres {
+.pres-value{
     font-size: 4vw;
 }
 
-.weather-value #wind{
+.wind-value{
     margin-right: 10px;
 }
 
@@ -468,22 +468,36 @@
 }
 
 @media (max-width: 1200px) {
+
+    .location h1 {
+        font-size: 3vw;
+    }
+
     #weather-description-icon {
-        font-size: 250px;
+        font-size: 20vw;
     }
     
     #weather-description-text {
-        font-size: 35px;
+        font-size: 2.5vw;
     }
+
+    .other-index p {
+        font-size: 1.8vw;
+    }
+
 }
 
 @media (max-width: 992px) {
     #weather-description-icon {
-        font-size: 200px;
+        font-size: 17vw;
     }
     
     #weather-description-text {
-        font-size: 25px;
+        font-size: 2.2vw;
+    }
+
+    .other-index p {
+        font-size: 1.8vw;
     }
 
     .footer {
@@ -498,11 +512,12 @@
         display: flex;
         justify-content: center;
         flex-direction: column;
+    }*/
+
+    h1 {
+        font-size: 5.5vw;
     }
 
-    header h1 {
-        margin-top: 0px;
-    } */
     .navbar {
         display: block;
         height: 100vh;
@@ -591,6 +606,18 @@
         overflow: hidden;
     }
 
+    .refresh-data {
+        height: 5.5vw;   
+    }
+
+    .refresh-data i {
+        font-size: 4.5vw;
+    }
+
+    .location h1 {
+        font-size: 5vw;
+    }
+
     .overview1 {
         width: 100%;
         height: 40vh;
@@ -599,11 +626,15 @@
     }
     
     #weather-description-icon {
-        font-size: 300px;
+        font-size: 32vw;
     }
     
     #weather-description-text {
-        font-size: 45px;
+        font-size: 5vw;
+    }
+
+    .other-index p {
+        font-size: 3vw;
     }
 
     .overview2 {
@@ -617,6 +648,18 @@
         padding: 10px;
     }
 
+    .item-name {
+        font-size: 3vw;
+    }
+
+    .weather-value span,i {
+        font-size: 8vw;
+    }
+
+    span#pres {
+        font-size: 7vw;
+    }
+
     .timeSeries {
         width: 100%;
         height: 40vh;
@@ -626,5 +669,14 @@
 
     .footer {
         height: 400px;
+    }
+    
+    .footer-content1 {
+        width: 100%;
+    }
+
+    .footer-content2 {
+        margin-top: 10px;
+        width: 100%;
     }
 }
