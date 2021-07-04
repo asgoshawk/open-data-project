@@ -353,8 +353,8 @@ function updateObserveData(ObserveData) {
     let obsWeather = ObserveData.weatherElement;
     // console.log(ObserveData);
     let wdir = obsWeather[1].elementValue;
-    let wdsd = Math.round((parseFloat(obsWeather[2].elementValue) * 10) / 10).toFixed(1);
-    let temp = Math.round((parseFloat(obsWeather[3].elementValue) * 10) / 10).toFixed(1);
+    let wdsd = ((parseFloat(obsWeather[2].elementValue) * 10) / 10).toFixed(1);
+    let temp = ((parseFloat(obsWeather[3].elementValue) * 10) / 10).toFixed(1);
     let humd = Math.round(parseFloat(obsWeather[4].elementValue * 100));
     let pres = Math.round(parseFloat(obsWeather[5].elementValue));
     let uv = Math.round(parseFloat(obsWeather[13].elementValue));
