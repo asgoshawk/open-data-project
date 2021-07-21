@@ -14,13 +14,15 @@ function min() {
 };
 
 // API and Plot functions
-async function getCWBForcastData(locationName) {
+async function getCWBForecastData(locationName) {
     var authKey = config.CWB_Auth;
-    var cwbURL = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-071?Authorization=" + authKey + "&format=JSON&locationName=" + locationName;
-    let cwbForcast = await fetch(cwbURL).then(res => { return res.json() })
+    var cwbURL = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-069?Authorization=" + authKey + "&format=JSON&locationName=" + locationName;
+    // 1 week forecast
+    // var cwbURL = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-071?Authorization=" + authKey + "&format=JSON&locationName=" + locationName;
+    let cwbForecast = await fetch(cwbURL).then(res => { return res.json() })
         .then(result => { return result.records.locations[0].location[0].weatherElement; })
         .catch(err => { console.log(err); });
-    return cwbForcast;
+    return cwbForecast;
 };
 
 async function getCWBObserveData(locationName) {
@@ -60,13 +62,19 @@ async function getPast24hrObserveData() {
     return { temp: temp.reverse(), humd: humd.reverse(), pres: pres.reverse(), wind: wind.reverse() };
 };
 
-function plotForcast(forcastData) {
+function plotForecast(forecastData) {
     var checkPlotsExist = false;
     var boxesInnerHeight = 0,
         boxesInnerWidth = 0;
-    // console.log(forcastData);
+    // console.log(forecastData);
 
-    var timeStamp = forcastData[1].time.map(item => {
+    var timeStamp = forecastData[1].time.map(item => {
+        var date1 = new Date(item.startTime).getTime();
+        var date2 = new Date(item.startTime).getTime();
+        return new Date((date1 + date2) / 2);
+    });
+
+    var timeStampForPoP = forecastData[7].time.map(item => {
         var date1 = new Date(item.startTime).getTime();
         var date2 = new Date(item.startTime).getTime();
         return new Date((date1 + date2) / 2);
@@ -85,7 +93,7 @@ function plotForcast(forcastData) {
                 gridcolor: '#6B6E70',
                 color: 'white',
                 title: {
-                    text: "Forcast Time"
+                    text: "Forecast Time"
                 }
             },
             margin: {
@@ -108,38 +116,20 @@ function plotForcast(forcastData) {
             showlegend: true
         };
 
-        var tempAvg = forcastData[1].time.map(item => item.elementValue[0].value);
-        var tempMin = forcastData[8].time.map(item => item.elementValue[0].value);
-        var tempMax = forcastData[12].time.map(item => item.elementValue[0].value);
-        var dewpAvg = forcastData[14].time.map(item => item.elementValue[0].value);
-
-        var dTMax = [],
-            dTMin = [];
-
-        for (let i = 0; i < tempAvg.length; i++) {
-            dTMax.push(tempMax[i] - tempAvg[i]);
-            dTMin.push(tempAvg[i] - tempMin[i]);
-        };
+        var tempAvg = forecastData[3].time.map(item => item.elementValue[0].value);
+        var dewpAvg = forecastData[10].time.map(item => item.elementValue[0].value);
 
         var data = [
             {
                 x: timeStamp,
                 y: tempAvg,
-                error_y: {
-                    type: 'data',
-                    symmetric: false,
-                    array: dTMax,
-                    arrayminus: dTMin,
-                    color: '#61892F',
-                    opacity: 0.8
-                },
                 type: 'scatter',
                 mode: 'lines',
                 line: {
                     color: '#86C232',
                     shape: 'spline'
                 },
-                name: 'Avg. Temp.'
+                name: 'Temp.'
             },
             {
                 x: timeStamp,
@@ -150,11 +140,11 @@ function plotForcast(forcastData) {
                     color: '#0097C8',
                     shape: 'spline'
                 },
-                name: 'Avg. Dew point'
+                name: 'Dew point'
             },
         ];
-        var lowerLimit = min(...dewpAvg) - (max(...tempMax) - min(...dewpAvg)) * 0.1;
-        var upperLimit = max(...tempMax) + (max(...tempMax) - min(...dewpAvg)) * 0.2;
+        var lowerLimit = min(...dewpAvg) - (max(...tempAvg) - min(...dewpAvg)) * 0.1;
+        var upperLimit = max(...tempAvg) + (max(...tempAvg) - min(...dewpAvg)) * 0.2;
         var newLayout = Object.assign({}, commonLayout, {
             yaxis: {
                 gridcolor: '#6B6E70',
@@ -167,7 +157,7 @@ function plotForcast(forcastData) {
         });
 
         var config = { responsive: true }
-        Plotly.newPlot('plotlyForcast', data, newLayout, config);
+        Plotly.newPlot('plotlyForecast', data, newLayout, config);
     };
 
     function plotHumd(plotH, plotW) {
@@ -183,7 +173,7 @@ function plotForcast(forcastData) {
                 gridcolor: '#6B6E70',
                 color: 'white',
                 title: {
-                    text: "Forcast Time"
+                    text: "Forecast Time"
                 }
             },
             margin: {
@@ -206,7 +196,7 @@ function plotForcast(forcastData) {
             showlegend: true
         };
 
-        var rhAvg = forcastData[2].time.map(item => item.elementValue[0].value);
+        var rhAvg = forecastData[4].time.map(item => item.elementValue[0].value);
 
         var data = [
             {
@@ -236,11 +226,11 @@ function plotForcast(forcastData) {
         });
 
         var config = { responsive: true }
-        Plotly.purge('plotlyForcast');
-        Plotly.newPlot('plotlyForcast', data, newLayout, config);
+        Plotly.purge('plotlyForecast');
+        Plotly.newPlot('plotlyForecast', data, newLayout, config);
     };
 
-    function plot12PoP(plotH, plotW) {
+    function plot6PoP(plotH, plotW) {
         var commonLayout = {
             autosize: false,
             width: plotW * 0.9,
@@ -253,9 +243,9 @@ function plotForcast(forcastData) {
                 gridcolor: '#6B6E70',
                 color: 'white',
                 title: {
-                    text: "Forcast Time"
+                    text: "Forecast Time"
                 },
-                range: [timeStamp[0], timeStamp[6]]
+                // range: [timeStampForPoP[0], timeStampForPoP[12]]
             },
             margin: {
                 l: 50,
@@ -277,11 +267,11 @@ function plotForcast(forcastData) {
             showlegend: true
         };
 
-        var pop12hr = forcastData[0].time.map(item => item.elementValue[0].value);
+        var pop12hr = forecastData[7].time.map(item => item.elementValue[0].value);
 
         var data = [
             {
-                x: timeStamp,
+                x: timeStampForPoP,
                 y: pop12hr,
                 type: 'scatter',
                 mode: 'lines',
@@ -308,14 +298,84 @@ function plotForcast(forcastData) {
         });
 
         var config = { responsive: true }
-        Plotly.purge('plotlyForcast');
-        Plotly.newPlot('plotlyForcast', data, newLayout, config);
+        Plotly.purge('plotlyForecast');
+        Plotly.newPlot('plotlyForecast', data, newLayout, config);
+    };
+
+    function plotWind(plotH, plotW) {
+        var commonLayout = {
+            autosize: false,
+            width: plotW * 0.9,
+            height: plotH * 0.8,
+            plot_bgcolor: 'rgba(0, 0, 0, 0)',
+            paper_bgcolor: 'rgba(0, 0, 0, 0)',
+            xaxis: {
+                // fixedrange: true,
+                showgrid: false,
+                gridcolor: '#6B6E70',
+                color: 'white',
+                title: {
+                    text: "Forecast Time"
+                }
+            },
+            margin: {
+                l: 50,
+                r: 0,
+                b: 70,
+                t: 0,
+            },
+            font: {
+                family: "Arial",
+                size: 15,
+                color: 'white'
+            },
+            legend: {
+                x: 1,
+                xanchor: 'right',
+                y: 1,
+                bgcolor: '#222629'
+            },
+            showlegend: true
+        };
+
+        var windSpeed = forecastData[8].time.map(item => item.elementValue[0].value);
+
+        var data = [
+            {
+                x: timeStamp,
+                y: windSpeed,
+                type: 'scatter',
+                mode: 'lines',
+                line: {
+                    color: '#86C232',
+                    shape: 'spline'
+                },
+                name: 'Wind'
+            },
+        ];
+
+        var lowerLimit = max((min(...windSpeed) - (max(...windSpeed) - min(...windSpeed)) * 0.1), 0);
+        var upperLimit = max(...windSpeed) + (max(...windSpeed) - min(...windSpeed)) * 0.15;
+        var newLayout = Object.assign({}, commonLayout, {
+            yaxis: {
+                gridcolor: '#6B6E70',
+                color: 'white',
+                title: {
+                    text: "Wind speed (m/s)"
+                },
+                range: [lowerLimit, upperLimit]
+            },
+        });
+
+        var config = { responsive: true }
+        Plotly.purge('plotlyForecast');
+        Plotly.newPlot('plotlyForecast', data, newLayout, config);
     };
 
     var timeID = setInterval(() => {
         if (mainTurnOn) {
-            boxesInnerHeight = document.getElementsByClassName("forcast-content")[0].clientHeight;
-            boxesInnerWidth = document.getElementsByClassName("forcast-content")[0].clientWidth;
+            boxesInnerHeight = document.getElementsByClassName("forecast-content")[0].clientHeight;
+            boxesInnerWidth = document.getElementsByClassName("forecast-content")[0].clientWidth;
             plotTemp(boxesInnerHeight, boxesInnerWidth);
             clearInterval(timeID);
             checkPlotsExist = true;
@@ -324,26 +384,30 @@ function plotForcast(forcastData) {
 
     window.addEventListener('resize', function () {
         if (checkPlotsExist) {
-            boxesInnerHeight = document.getElementsByClassName("forcast-content")[0].clientHeight;
-            boxesInnerWidth = document.getElementsByClassName("forcast-content")[0].clientWidth;
+            boxesInnerHeight = document.getElementsByClassName("forecast-content")[0].clientHeight;
+            boxesInnerWidth = document.getElementsByClassName("forecast-content")[0].clientWidth;
             var updateLayout = {
                 width: boxesInnerWidth * 0.9,
                 height: boxesInnerHeight * 0.8,
             };
-            Plotly.relayout('plotlyForcast', updateLayout);
+            Plotly.relayout('plotlyForecast', updateLayout);
         }
     });
 
-    document.getElementById("forcast-temp").addEventListener("click", () => {
+    document.getElementById("forecast-temp").addEventListener("click", () => {
         plotTemp(boxesInnerHeight, boxesInnerWidth)
     });
 
-    document.getElementById("forcast-rh").addEventListener("click", () => {
+    document.getElementById("forecast-rh").addEventListener("click", () => {
         plotHumd(boxesInnerHeight, boxesInnerWidth)
     });
 
-    document.getElementById("forcast-pop").addEventListener("click", () => {
-        plot12PoP(boxesInnerHeight, boxesInnerWidth)
+    document.getElementById("forecast-pop").addEventListener("click", () => {
+        plot6PoP(boxesInnerHeight, boxesInnerWidth)
+    });
+
+    document.getElementById("forecast-wind").addEventListener("click", () => {
+        plotWind(boxesInnerHeight, boxesInnerWidth)
     });
 
 };
@@ -558,8 +622,8 @@ function updateWeatherDescription(description, time) {
 
 // Onload 
 window.onload = function () {
-    var locationNameForcast = "板橋區";
-    getCWBForcastData(locationNameForcast).then(data => plotForcast(data));
+    var locationNameForecast = "板橋區";
+    getCWBForecastData(locationNameForecast).then(data => plotForecast(data));
 
     var locationNameObserve = "板橋";
     getCWBObserveData(locationNameObserve).then(data => updateObserveData(data));
@@ -583,7 +647,7 @@ window.onload = function () {
 
     let urlRadar = "https://opendata.cwb.gov.tw/fileapi/opendata/MSC/O-A0058-005.png";
     let imageBounds = [[17.75, 115.0], [29.25, 126.5]];
-    L.imageOverlay(urlRadar, imageBounds).addTo(mymap);
+    L.imageOverlay(urlRadar, imageBounds, { opacity: 0.7 }).addTo(mymap);
 
     var timeIDForMap = setInterval(() => {
         if (mainTurnOn) {

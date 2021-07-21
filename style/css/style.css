@@ -205,7 +205,7 @@
     display: block;
     /* width: 30%; */
     top: 5%;
-    font-size: 280px;
+    font-size: 250px;
 }
 
 #weather-description-text {
@@ -324,11 +324,11 @@
     border-radius: 20px;
 }
 
-.forcast {
+.forecast {
     margin-top: 30px;
 }
 
-.forcast-content {
+.forecast-content {
     display: flex;
     /* justify-content:space-evenly; */
     justify-content: center;
@@ -342,7 +342,7 @@
     border-radius: 20px;
 }
 
-.forcast-btn-list {
+.forecast-btn-list {
     /* width: auto; */
     display: flex;
     flex-wrap: nowrap;
@@ -351,7 +351,7 @@
     margin-top: 20px;
 }
 
-.forcast-btn {
+.forecast-btn {
     display: block;
     font-weight: bold;
     margin-left: 5px;
@@ -367,12 +367,12 @@
     transition: all .2s ease-in-out;
 }
 
-.forcast-btn:hover {
+.forecast-btn:hover {
     background-color:#86C232;
     color: #222629;
 }
 
-#plotlyForcast {
+#plotlyForecast {
 
     width: 90%;
 }
@@ -467,6 +467,22 @@
     margin-top: 20px;
 }
 
+@media (max-width: 1400px) {
+
+    #weather-description-icon {
+        font-size: 17vw;
+    }
+    
+    #weather-description-text {
+        /* font-size: 2.5vw; */
+    }
+
+    .other-index p {
+        /* font-size: 1.8vw; */
+    }
+
+}
+
 @media (max-width: 1200px) {
 
     .location h1 {
@@ -474,7 +490,7 @@
     }
 
     #weather-description-icon {
-        font-size: 20vw;
+        font-size: 17vw;
     }
     
     #weather-description-text {
@@ -489,7 +505,7 @@
 
 @media (max-width: 992px) {
     #weather-description-icon {
-        font-size: 17vw;
+        font-size: 14vw;
     }
     
     #weather-description-text {
@@ -679,4 +695,20 @@
         margin-top: 10px;
         width: 100%;
     }
+}
+
+@media (max-width: 550px) {
+
+    #weather-description-icon {
+        font-size: 28vw;
+    }
+    
+    #weather-description-text {
+        /* font-size: 2.5vw; */
+    }
+
+    .other-index p {
+        /* font-size: 1.8vw; */
+    }
+
 }
