@@ -645,7 +645,7 @@ window.onload = function () {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
     }).addTo(mymap);
 
-    let urlRadar = "https://opendata.cwb.gov.tw/fileapi/opendata/MSC/O-A0058-005.png";
+    let urlRadar = "https://cwbopendata.s3.ap-northeast-1.amazonaws.com/MSC/O-A0058-005.png";
     let imageBounds = [[17.75, 115.0], [29.25, 126.5]];
     L.imageOverlay(urlRadar, imageBounds, { opacity: 0.7 }).addTo(mymap);
 
